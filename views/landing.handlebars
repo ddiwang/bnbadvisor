@@ -1,0 +1,21 @@
+
+<h1>BNB ADVISOR</h1>
+
+<main>
+  <p>This is a website for you to check BNBs! Share your experience with the world!</p>
+  <form action="/listings" method="GET">
+  <input type="text" name="city" placeholder="city">
+  <input type="text" name="keyword" placeholder="keyword">
+  <button type="submit">SEARCH</button>
+</form>
+
+<h2>Recommended BNB</h2>
+<ul>
+  {{#each featuredBnbs}}
+    <li>
+      <a href="/bnbs/{{this._id}}">{{this.name}}</a> - {{this.city}}
+    </li>
+  {{/each}}
+</ul>
+
+</main>

@@ -1,0 +1,30 @@
+{{!
+This page will respond with a valid HTML document with the results returned from the API.
+The title of the document should be "Movies Found". You should have the title set as the <title> element of
+    the HTML document and as an h1 in your document. In an h2 element, you will print the supplied
+    searchMoviesByName.
+
+    You must also provide an a tag that links back to your / route with the text Make another search.
+
+    Your page should reference a CSS file, /public/css/styles.css; this file should have at least 10 rulesets you must
+    use at
+    least 5 of them on this page.
+
+    }}
+
+<h1>BNB Found</h1>
+<h2>Search Results for "{{searchTitle}}"</h2>
+
+<a href="/bnb">Search for Another BNB</a>
+
+<main>
+  <ol>
+    {{#each results}}
+    <li>
+      <a href="/bnbs/{{this._id}}">{{this.name}}</a> - {{this.city}}
+    </li>
+    {{else}}
+    <li>not found any</li>
+    {{/each}}
+  </ol>
+</main>
