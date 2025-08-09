@@ -1,0 +1,65 @@
+body, ul {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Header styling */
+header {
+  background-color: #ffffff;
+  padding: 15px 30px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Navigation container styles */
+header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+header nav ul li {
+  display: inline;
+}
+
+/* Signin/signup links */
+header nav a {
+  text-decoration: none;
+  color: #0077cc;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+main{
+  margin: 30px;
+  padding: 20px;
+}
+
+/* Main title */
+.mainpage_text {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #333;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #777;
+}

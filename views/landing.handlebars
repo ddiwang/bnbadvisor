@@ -1,0 +1,89 @@
+<h1>BNB ADVISOR</h1>
+
+<main>
+  <p>This is a website for you to check BNBs! Share your experience with the world!</p>
+
+  <form action="/listings" method="GET" onsubmit="return validateForm()">
+
+    <input type="text" name="keyword" id="keyword" placeholder="Search keyword">
+    <button type="submit">SEARCH</button>
+  </form>
+
+  <form action="/listings" method="GET" onsubmit="return validateForm()">
+    <select name="city" id="city">
+      <option value="">-- Select City --</option>
+      {{#each cityList}}
+      <option value="{{this}}">{{this}}</option>
+      {{/each}}
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
+  <h2>Top Rated BNB</h2>
+  <ul>
+    {{#each featured}}
+    <li>
+      <a href="/properties/{{this._id}}">
+      {{this.title}} - {{this.city}} - Rating: {{this.rating}}
+      </a>
+    </li>
+    {{/each}}
+  </ul>
+
+</main>
+
+<script>
+  function validateForm() {
+    const keyword = document.getElementById("keyword").value.trim();
+    const city = document.getElementById("city").value;
+
+    // Optional: make at least one field required
+    if (!keyword && !city) {
+      alert("Please enter a keyword or select a city.");
+      return false;
+    }
+
+    // Optional: prevent numbers-only search
+    if (/^\d+$/.test(keyword)) {
+      alert("Keyword should not be only numbers.");
+      return false;
+    }
+
+    return true;
+  }
+</script>
+
+{{!--
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Landing</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="/signin">Sign In</a> | <a href="/signup">Sign Up</a>
+    </nav>
+    <h1>Welcome to BNB Review</h1>
+    <form action="/listings" method="get">
+      <input type="text" name="keyword" placeholder="Search by keyword">
+      <input type="text" name="city" placeholder="Filter by city">
+      <button type="submit">Search</button>
+    </form>
+  </header>
+
+  <section>
+    <h2>Top Rated BNBs</h2>
+    <ul>
+      {{#each featured}}
+      <li>{{this.title}} - {{this.city}} - Rating: {{this.rating}}</li>
+      {{/each}}
+    </ul>
+  </section>
+</body>
+
+</html>
+--}}
