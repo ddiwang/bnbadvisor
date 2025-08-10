@@ -1,0 +1,141 @@
+{{!< main}}
+
+<main class="bnb-details">
+  <div class="container">
+    <!-- 房源图片轮播 -->
+    <div class="bnb-gallery">
+      <img src="{{bnb.photo}}" alt="{{bnb.title}}" class="main-image">
+      <div class="thumbnails">
+        {{#each bnb.additionalPhotos}}
+          <img src="{{this}}" alt="Gallery image {{@index}}">
+        {{/each}}
+      </div>
+    </div>
+    
+    <div class="bnb-header">
+      <h1>{{bnb.title}}</h1>
+      <div class="location-rating">
+        <p class="location">
+          <i class="fas fa-map-marker-alt"></i> 
+          {{bnb.address.street}}, {{bnb.address.city}}, {{bnb.address.country}}
+        </p>
+        <div class="rating-badge">
+          <span class="rating-value">{{bnb.averageRating}}</span>
+          <div class="stars">{{bnb.averageRating}}</div>
+          <span class="review-count">({{reviewCount}} reviews)</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bnb-content">
+      <div class="bnb-info">
+        <div class="bnb-description">
+          <h2>About this property</h2>
+          <p>{{bnb.description}}</p>
+        </div>
+        
+        <div class="bnb-amenities">
+          <h2>Amenities</h2>
+          <ul class="amenities-list">
+            {{#each bnb.amenities}}
+              <li><i class="fas fa-check"></i> {{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        
+        <div class="bnb-rules">
+          <h2>House Rules</h2>
+          <ul>
+            {{#each bnb.houseRules}}
+              <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+      
+      <div class="booking-sidebar">
+        <div class="booking-card">
+          <div class="price">
+            $<strong>{{bnb.pricePerNight}}</strong> <span>per night</span>
+          </div>
+          
+          <div class="booking-form">
+            <div class="date-picker">
+              <label for="checkin">Check-in</label>
+              <input type="date" id="checkin">
+            </div>
+            <div class="date-picker">
+              <label for="checkout">Check-out</label>
+              <input type="date" id="checkout">
+            </div>
+            <div class="guests">
+              <label for="guests">Guests</label>
+              <select id="guests">
+                <span>{{bnb.maxGuests}}</span>
+              </select>
+            </div>
+            <button class="btn-book">Reserve</button>
+          </div>
+          
+          <div class="price-summary">
+            <div class="summary-item">
+              <span>${{bnb.pricePerNight}} x <span id="nights">1</span> nights</span>
+              <span id="base-price">${{bnb.pricePerNight}}</span>
+            </div>
+            <div class="summary-total">
+              <span>Total</span>
+              <span id="total-price">${{bnb.pricePerNight}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 评论部分 -->
+    <section class="bnb-reviews">
+      <div class="reviews-header">
+        <h2>
+          <i class="fas fa-star"></i> 
+          {{bnb.averageRating}} · 
+          <span>{{reviewCount}} reviews</span>
+        </h2>
+        <a href="/bnbs/{{bnb._id}}/reviews" class="btn-all-reviews">See all reviews</a>
+      </div>
+      
+      <div class="reviews-grid">
+        {{#each recentReviews}}
+          <div class="review-card">
+            <div class="review-header">
+              <div class="user-info">
+                <img src="{{this.guestId.profilePicture}}" alt="{{this.guestId.firstName}}">
+                <div>
+                  <h3>{{this.guestId.firstName}} {{this.guestId.lastName}}</h3>
+                  <p>{{this.createdAt}}</p>
+                </div>
+              </div>
+              <div class="review-rating">{{this.rating}}</div>
+            </div>
+            <div class="review-content">
+              <p>{{this.comment}}</p>
+            </div>
+            <div class="review-footer">
+              <button class="btn-like">
+                <i class="fas fa-thumbs-up"></i> 
+                <span>{{this.likes}}</span>
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      
+      
+    <!-- 显示更多评论链接 -->
+  
+        <div class="text-center">
+          <a href="/bnbs/{{bnb._id}}/reviews" class="btn-more-reviews">
+            Show all {{reviewCount}} reviews
+          </a>
+        </div>
+    </section>
+  </div>
+</main>

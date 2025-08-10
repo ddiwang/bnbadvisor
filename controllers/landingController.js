@@ -1,4 +1,7 @@
 import Property from '../models/Property.js';
+import Reviews from '../models/Reviews.js';
+
+
 import xss from 'xss';
 
 export const getLandingPage = async (req, res) => {
@@ -6,6 +9,7 @@ export const getLandingPage = async (req, res) => {
     const featured = await Property.find().sort({ rating: -1 }).limit(5);
     //dynamic city list
     const cities = await Property.distinct("city");
+    console.log(cities);
 
     return res.render('landing', { featured, title: 'BNB Advisor', cityList: cities });
   } catch (err) {
@@ -74,3 +78,52 @@ export const getListings = async (req, res) => {
     });
   }
 };
+
+
+export const getId = async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // 获取房源详情
+      const bnb = await Property.findOne({ _id: id });
+      
+      if (!bnb) {
+        return res.status(404).render('error', {
+          title: 'Not Found',
+          errorCode: 404,
+          errorMessage: 'Property not found'
+        });
+      }
+      
+      // 获取相关评论
+      const bnbReviews = await Reviews.find({ listingId: bnb._id })
+        .sort({ createdAt: -1 });
+      
+      // 计算平均评分
+      let averageRating = 0;
+      if (bnbReviews.length > 0) {
+        const totalRating = bnbReviews.reduce((sum, review) => sum + review.rating, 0);
+        averageRating = totalRating / bnbReviews.length;
+      }
+      
+      // 获取3条最新评论
+      const recentReviews = bnbReviews.slice(0, 3);
+      
+      res.render('bnbs', {
+        title: bnb.title,
+        bnb: {
+          ...bnb,
+          averageRating: parseFloat(averageRating.toFixed(1))
+        },
+        recentReviews,
+        reviewCount: bnbReviews.length
+      });
+    } catch (error) {
+      console.error('BNB details error:', error);
+      res.status(500).render('error', {
+        title: 'Server Error',
+        errorCode: 500,
+        errorMessage: 'Failed to load property details'
+      });
+    }
+  };

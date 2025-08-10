@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">BNBAdvisor</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">Browse</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        {{#if user}}
+          {{#if (eq user.role 'manager')}}
+            <li class="nav-item">
+              <a class="nav-link" href="/managers/dashboard">
+                <i class="fas fa-tachometer-alt"></i> Manager Dashboard
+              </a>
+            </li>
+          {{/if}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <img src="{{user.profilePicture}}" alt="{{user.firstName}}" class="rounded-circle me-1" width="30" height="30">
+              {{user.firstName}}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/profile/reviews">My Reviews</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        {{else}}
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/signup">Sign Up</a>
+          </li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav>
