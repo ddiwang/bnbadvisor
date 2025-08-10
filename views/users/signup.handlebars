@@ -1,0 +1,115 @@
+{{!-- User Registration Page --}}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Join BNB Advisor</h2>
+    
+    {{#if error}}
+      <div class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        <span>{{error}}</span>
+      </div>
+    {{/if}}
+    
+    <form method="POST" action="/users/signup">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName" class="form-label">First Name:</label>
+          <input 
+            type="text" 
+            id="firstName" 
+            name="firstName" 
+            value="{{formData.firstName}}" 
+            required
+            minlength="2"
+            maxlength="25"
+            placeholder="Enter your first name"
+            class="form-control"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName" class="form-label">Last Name:</label>
+          <input 
+            type="text" 
+            id="lastName" 
+            name="lastName" 
+            value="{{formData.lastName}}" 
+            required
+            minlength="2"
+            maxlength="25"
+            placeholder="Enter your last name"
+            class="form-control"
+          >
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email" class="form-label">Email:</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          value="{{formData.email}}" 
+          required
+          placeholder="Enter your email"
+          class="form-control"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="role" class="form-label">I am a:</label>
+        <select id="role" name="role" required class="form-control form-select">
+          <option value="user" {{#if (eq formData.role 'user')}}selected{{/if}}>Guest (Looking for accommodations)</option>
+          <option value="manager" {{#if (eq formData.role 'manager')}}selected{{/if}}>Host (I have properties to rent)</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="dateOfBirth" class="form-label">Date of Birth:</label>
+        <input 
+          type="date" 
+          id="dateOfBirth" 
+          name="dateOfBirth" 
+          value="{{formData.dateOfBirth}}" 
+          required
+          max="2007-08-09"
+          class="form-control"
+        >
+        <small class="form-help">You must be at least 18 years old to register</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="password" class="form-label">Password:</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required
+          minlength="6"
+          placeholder="Enter your password (min 6 characters)"
+          class="form-control"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirm Password:</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          name="confirmPassword" 
+          required
+          minlength="6"
+          placeholder="Confirm your password"
+          class="form-control"
+        >
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+    
+    <div class="auth-links">
+      <p>Already have an account? <a href="/users/login">Login here</a></p>
+      <p><a href="/">← Back to Home</a></p>
+    </div>
+  </div>
+</div>

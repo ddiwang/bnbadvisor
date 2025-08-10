@@ -1,0 +1,106 @@
+{{!-- User Profile Page --}}
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-info">
+      <h1>{{user.firstName}} {{user.lastName}}</h1>
+      <p class="profile-email">{{user.email}}</p>
+      <p class="profile-meta">Member since {{formatDate user.createdAt}}</p>
+      {{#if (eq user.role 'manager')}}
+        <span class="badge badge-secondary">Host</span>
+      {{else}}
+        <span class="badge">Guest</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if success}}
+    <div class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <span>{{success}}</span>
+    </div>
+  {{/if}}
+
+  {{#if error}}
+    <div class="alert alert-error">
+      <span class="alert-icon">⚠️</span>
+      <span>{{error}}</span>
+    </div>
+  {{/if}}
+
+  {{#if isOwner}}
+   
+    <div class="profile-sections">
+     
+      <div class="profile-section">
+        <h3>Personal Information</h3>
+        <form method="POST" action="/users/profile">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name:</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                value="{{user.firstName}}" 
+                required
+                minlength="2"
+                maxlength="25"
+                class="form-control"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name:</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                value="{{user.lastName}}" 
+                required
+                minlength="2"
+                maxlength="25"
+                class="form-control"
+              >
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="dateOfBirth" class="form-label">Date of Birth:</label>
+            <input 
+              type="date" 
+              id="dateOfBirth" 
+              name="dateOfBirth" 
+              value="{{formatDate user.dateOfBirth 'YYYY-MM-DD'}}" 
+              required
+              max="2007-08-09"
+              class="form-control"
+            >
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+      </div>
+
+      <!-- Logout -->
+      <div class="profile-section">
+        <h3>Account Actions</h3>
+        <form method="POST" action="/users/logout">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+    </div>
+  {{else}}
+    <div class="profile-sections">
+      <div class="profile-section">
+        <h3>About {{user.firstName}}</h3>
+        <p class="card-text">This is {{user.firstName}} {{user.lastName}}'s public profile.</p>
+        <p class="card-text">Email: {{user.email}}</p>
+        <p class="card-text">Member since: {{formatDate user.createdAt}}</p>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="text-center mt-xl">
+    <a href="/" class="btn btn-ghost">← Back to Home</a>
+  </div>
+</div>
