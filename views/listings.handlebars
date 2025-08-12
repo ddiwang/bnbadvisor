@@ -6,8 +6,8 @@
   <ol>
     {{#each results}}
     <li>
-      <a href="/properties/{{this._id}}"></a>
-      {{this.title}} - {{this.city}} - Rating: {{this.rating}}
+      <a href="/properties/{{this._id}}">
+      {{this.title}} - {{this.city}} - Rating: {{this.averageRating}}
       </a>
     </li>
     {{else}}
@@ -16,24 +16,3 @@
   </ol>
 </main>
 
-{{!--
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>Listing</title>
-</head>
-
-<body>
-  <h1>Search Results</h1>
-  <ul>
-    {{#each results}}
-    <li>{{this.name}} - {{this.city}} - Rating: {{this.rating}}</li>
-    {{else}}
-    <li>No results found</li>
-    {{/each}}
-  </ul>
-</body>
-
-</html>
---}}

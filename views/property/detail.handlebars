@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="/css/reviews.css">
+
+<h1>{{bnb.title}}</h1>
+<p><strong>City:</strong> {{bnb.city}}</p>
+<p><strong>Address:</strong> {{bnb.address}}</p>
+<p><strong>Price per night:</strong> ${{bnb.pricePerNight}}</p>
+<p><strong>Bedrooms:</strong> {{bnb.bedrooms}}</p>
+<p><strong>Bathrooms:</strong> {{bnb.bathrooms}}</p>
+<p><strong>Amenities:</strong> {{#each bnb.amenities}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+<p><strong>Average Rating:</strong> {{bnb.averageRating}}</p>
+
+<h2>Description</h2>
+<p>{{bnb.description}}</p>
+
+<hr>
+
+<h2>Reviews</h2>
+{{#if reviews.length}}
+<ul class="reviews-list">
+  {{#each reviews}}
+  <li class="review-item">
+    <strong>{{this.author}}</strong>: {{this.comment}} (Rating: {{this.rating}})
+    <br>
+    <button class="like-btn" data-id="{{this._id}}">
+      👍 Like (<span class="likes-count">{{this.likes}}</span>)
+    </button>
+  </li>
+  {{/each}}
+</ul>
+{{else}}
+<p>No reviews yet</p>
+{{/if}}
+
+<!-- 引入点赞逻辑 -->
+<script src="/js/reviews.js"></script>
+
+<script>
+  // 用于点赞更新的AJAX请求
+  function likeReview(reviewId) {
+    fetch(`/reviews/${reviewId}/like`, {
+      method: 'POST',
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // 更新点赞数
+        document.getElementById(`likes-${reviewId}`).textContent = `Likes: ${data.likes}`;
+      }
+    });
+  }
+
+  // 请求新的评分数据
+  function updateRating() {
+    fetch('/property/averageRating', { method: 'GET' })
+      .then(response => response.json())
+      .then(data => {
+        // 更新页面上的评分数据
+        document.getElementById('averageRating').textContent = `Average Rating: ${data.averageRating}`;
+      });
+  }
+
+  // 页面加载时，更新评分
+  window.onload = function () {
+    updateRating();  // 获取并更新评分
+  }
+</script>

@@ -6,6 +6,17 @@ import landingRoutes from './routes/landing.js';
 import userRoutes from './routes/users.js';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 
+import propertyRoutes from './routes/propertyRoutes.js';
+import reviewRoutes from './routes/reviews.js';
+
+import { getAverageRating } from './controllers/propertyController.js';
+
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -47,6 +58,16 @@ app.use(express.json());
 
 app.use('/', landingRoutes);
 app.use('/users', userRoutes);
+
+app.use('/properties', propertyRoutes);
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/reviews', reviewRoutes);
+
+app.get('/property/averageRating', getAverageRating);
+
+
+
 
 app.use((req, res, next) => {
   res.status(404).render('error', {

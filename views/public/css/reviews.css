@@ -1,0 +1,22 @@
+.reviews-list {
+  list-style: none;
+  padding: 0;
+}
+
+.review-item {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.like-btn {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.like-btn:hover {
+  background-color: #e0e0e0;
+}

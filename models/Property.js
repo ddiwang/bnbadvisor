@@ -11,11 +11,34 @@ const propertySchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  address: {
+    type: String,
+    required: true,
+
+    trim: true
+  },
   description: {
     type: String,
-    trim: true,
+    required: true,
+    trim: true
   },
-  rating: {
+  pricePerNight: {
+    type: Number,
+    required: true,
+    required: true
+  }, // 每晚价格
+  bedrooms: {
+    type: Number,
+    required: true,
+    default: 1
+  },
+  bathrooms: {
+    type: Number,
+    required: true,
+    default: 1
+  },
+  amenities: [String], // 设施
+  averageRating: {
     type: Number,
     min: 0,
     max: 5,
