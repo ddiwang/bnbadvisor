@@ -1,0 +1,37 @@
+<h2>All Reviews by {{user.username}}</h2>
+
+{{#if reviews.length}}
+  <ul class="review-list">
+    {{#each reviews}}
+      <li class="review-item">
+        <div class="header">
+          <strong>Property: {{this.property.name}}</strong>
+          <span class="date">{{this.createdAt}}</span>
+          <span class="rating">Rating: {{this.rating}}/5</span>
+        </div>
+        <div class="content">{{this.content}}</div>
+        <div class="actions">
+          <span class="likes">👍 {{this.likes.length}}</span>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+
+  <nav class="pagination">
+    {{#if pagination.totalPages}}
+      <ul>
+        {{#each pagination.totalPages as |p|}}
+          <li>
+            {{#ifEquals ../pagination.page p}}
+              <strong>{{p}}</strong>
+            {{else}}
+              <a href="?page={{p}}&limit={{../pagination.limit}}">{{p}}</a>
+            {{/ifEquals}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </nav>
+{{else}}
+  <p>This user has not written any reviews yet.</p>
+{{/if}}

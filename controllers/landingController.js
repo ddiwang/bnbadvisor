@@ -1,5 +1,5 @@
 import Property from '../models/Property.js';
-import Reviews from '../models/Reviews.js';
+import Reviews from '../models/Review.js';
 
 import xss from 'xss';
 

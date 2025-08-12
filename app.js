@@ -10,6 +10,8 @@ import propertyRoutes from './routes/propertyRoutes.js';
 import reviewRoutes from './routes/reviews.js';
 
 import { getAverageRating } from './controllers/propertyController.js';
+import { ifEquals, range } from './helpers/handlebars.js';
+
 
 
 import path from 'path';
@@ -32,7 +34,10 @@ app.engine('handlebars', exphbs.engine({
   defaultLayout: 'main',
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
+    ifEquals, 
+    range,
     eq: eqHelper
+
   }
 }));
 app.set('view engine', 'handlebars');

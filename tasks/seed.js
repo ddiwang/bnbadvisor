@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Property from '../models/Property.js';
-import Reviews from '../models/Reviews.js';
+import Reviews from '../models/Review.js';
 
 const MONGO_URI = 'mongodb://127.0.0.1:27017/mydb';
 

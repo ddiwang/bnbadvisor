@@ -1,0 +1,36 @@
+{{!-- views/reviews/show.handlebars --}}
+<h1>Review Details</h1>
+
+<div class="review-detail">
+  <h2>Listing:
+    {{#if review.listingId}}
+      {{review.listingId}}
+    {{else}}
+      -
+    {{/if}}
+  </h2>
+
+  <p><strong>Author:</strong>
+    {{#if review.author}}
+      {{review.author}}
+    {{else}}
+      Unknown
+    {{/if}}
+  </p>
+
+  <p><strong>Rating:</strong>
+    {{review.rating}} / 5
+  </p>
+
+  <p><strong>Review Text:</strong></p>
+  <blockquote>
+    {{review.comment}}
+  </blockquote>
+
+  <p><strong>Created At:</strong>
+    {{review.createdAt}}
+  </p>
+</div>
+
+<a href="/reviews">Back to All Reviews</a>
+{{!-- 或者你可以按你的 app 路由做改动 --}}

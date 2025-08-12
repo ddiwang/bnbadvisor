@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const reviewsSchema = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
   listingId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
@@ -47,4 +47,4 @@ const reviewsSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('Reviews', reviewsSchema);
+export default mongoose.model('Review', reviewSchema);
