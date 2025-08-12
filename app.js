@@ -10,35 +10,17 @@ import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access
 const app = express();
 
 
-const formatDateHelper = function(date, format) {
-  if (!date) return '';
-  
-  const d = new Date(date);
-  if (isNaN(d.getTime())) return '';
-  
-  if (format === 'YYYY-MM-DD') {
-    return d.toISOString().split('T')[0];
-  }
-  return d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
-
 const eqHelper = (a, b) => {
   return a === b;
 };
 
 
-Handlebars.registerHelper('formatDate', formatDateHelper);
 Handlebars.registerHelper('eq', eqHelper);
 
 app.engine('handlebars', exphbs.engine({
   defaultLayout: 'main',
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
-    formatDate: formatDateHelper,
     eq: eqHelper
   }
 }));

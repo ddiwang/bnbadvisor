@@ -4,7 +4,6 @@
     <div class="profile-info">
       <h1>{{user.firstName}} {{user.lastName}}</h1>
       <p class="profile-email">{{user.email}}</p>
-      <p class="profile-meta">Member since {{formatDate user.createdAt}}</p>
       {{#if (eq user.role 'manager')}}
         <span class="badge badge-secondary">Host</span>
       {{else}}
@@ -64,21 +63,22 @@
             </div>
           </div>
           
-          <div class="form-group">
-            <label for="dateOfBirth" class="form-label">Date of Birth:</label>
-            <input 
-              type="date" 
-              id="dateOfBirth" 
-              name="dateOfBirth" 
-              value="{{formatDate user.dateOfBirth 'YYYY-MM-DD'}}" 
-              required
-              max="2007-08-09"
-              class="form-control"
-            >
-          </div>
-          
           <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
+      </div>
+
+      <!-- Extension Area for Host Features -->
+      {{#if (eq user.role 'manager')}}
+        <!-- Host features can be added here by other team members -->
+        <div id="host-features-extension"></div>
+      {{/if}}
+
+      <!-- Extension Area for Reviews/Ratings -->
+      <div class="profile-section" id="reviews-extension">
+        <h3>Reviews & Activity</h3>
+        <p>Extension area for reviews and user activity features.</p>
+        <!-- Placeholder for reviews system -->
+        <div id="user-reviews-extension"></div>
       </div>
 
       <!-- Logout -->
@@ -95,7 +95,6 @@
         <h3>About {{user.firstName}}</h3>
         <p class="card-text">This is {{user.firstName}} {{user.lastName}}'s public profile.</p>
         <p class="card-text">Email: {{user.email}}</p>
-        <p class="card-text">Member since: {{formatDate user.createdAt}}</p>
       </div>
     </div>
   {{/if}}

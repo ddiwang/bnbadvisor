@@ -5,6 +5,81 @@ import { sanitizeInput } from '../middleware/xss.js';
 
 const router = Router();
 
+// API endpoint to check if email exists
+router.get('/api/check-email/:email', async (req, res) => {
+  try {
+    const email = req.params.email.toLowerCase();
+    const existingUser = await User.findOne({ email });
+    
+    res.json({
+      exists: !!existingUser,
+      message: existingUser ? 'This email is already registered' : 'Email is available'
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Server error checking email',
+      exists: false
+    });
+  }
+});
+
+router.get('/api/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid user ID' });
+  }
+});
+
+router.get('/api', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const role = req.query.role; 
+    
+    const query = role ? { role } : {};
+    const users = await User.find(query)
+      .select('-password')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
+      
+    const total = await User.countDocuments(query);
+    
+    res.json({
+      users,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error fetching users' });
+  }
+});
+
+router.patch('/api/:id/metadata', sanitizeInput, async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user._id !== req.params.id) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    
+    const { metadata } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: { metadata } },
+      { new: true, select: '-password' }
+    );
+    
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to update user metadata' });
+  }
+});
+
 //login page
 router.get('/login', (req, res) => {
   if (req.session.user) {
@@ -76,13 +151,13 @@ router.get('/signup', (req, res) => {
 //registration
 router.post('/signup', sanitizeInput, async (req, res) => {
   try {
-    const { firstName, lastName, email, password, confirmPassword, dateOfBirth, role } = req.body;
+    const { firstName, lastName, email, password, confirmPassword, role } = req.body;
     
-    if (!firstName || !lastName || !email || !password || !confirmPassword || !dateOfBirth || !role) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword || !role) {
       return res.status(400).render('users/signup', {
         title: 'Sign Up - BNB Advisor',
         error: 'All fields are required',
-        formData: { firstName, lastName, email, dateOfBirth, role }
+        formData: { firstName, lastName, email, role }
       });
     }
     
@@ -90,7 +165,7 @@ router.post('/signup', sanitizeInput, async (req, res) => {
       return res.status(400).render('users/signup', {
         title: 'Sign Up - BNB Advisor',
         error: 'Passwords do not match',
-        formData: { firstName, lastName, email, dateOfBirth, role }
+        formData: { firstName, lastName, email, role }
       });
     }
     
@@ -99,7 +174,6 @@ router.post('/signup', sanitizeInput, async (req, res) => {
       lastName,
       email,
       password,
-      dateOfBirth,
       role
     };
     
@@ -118,14 +192,20 @@ router.post('/signup', sanitizeInput, async (req, res) => {
     
     res.redirect('/users/profile');
   } catch (error) {
+    let errorMessage = error.message;
+    
+    // duplicate key error for email
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+      errorMessage = 'This email address is already registered. Please use a different email or try logging in.';
+    }
+    
     res.status(400).render('users/signup', {
       title: 'Sign Up - BNB Advisor',
-      error: error.message,
+      error: errorMessage,
       formData: {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        dateOfBirth: req.body.dateOfBirth,
         role: req.body.role
       }
     });
@@ -170,12 +250,11 @@ router.post('/profile', sanitizeInput, async (req, res) => {
   }
   
   try {
-    const { firstName, lastName, dateOfBirth } = req.body;
+    const { firstName, lastName } = req.body;
     
     const updateData = {
       firstName,
-      lastName,
-      dateOfBirth
+      lastName
     };
     
     const updatedUser = await User.findByIdAndUpdate(

@@ -29,24 +29,53 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  dateOfBirth: {
-    type: Date,
-    required: true
-  },
-  profilePicture: {
-    type: String,
-    default: '/images/default-avatar.jpg'
-  },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'manager'],
     default: 'user'
+  },
+  // Extended fields for other students' features
+  bio: {
+    type: String,
+    maxlength: 500,
+    default: ''
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+  phone: {
+    type: String,
+    default: ''
+  },
+  address: {
+    type: String,
+    default: ''
+  },
+  rating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5
+  },
+  reviewCount: {
+    type: Number,
+    default: 0
+  },
+
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  metadata: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
   }
 }, {
   timestamps: true
 });
 
-// Hash password before saving
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   
@@ -58,7 +87,6 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Password comparison method
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
