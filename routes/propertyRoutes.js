@@ -7,4 +7,7 @@ const router = express.Router();
 // 详情页
 router.get('/:id', propertyController.getPropertyById);
 
+// 详情页
+router.get('/:id/reviews', propertyController.getPropertyById);
+
 export default router;

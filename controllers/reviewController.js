@@ -17,9 +17,9 @@ function renderError(res, errorMsg, status = 400, view = 'error', extraData = {}
 // Create new review
 export async function create(req, res, next) {
   try {
-    const { listingId } = req.params;
+    const { listingId } = req.params.listingId;
     const userId = req.user && req.user._id;
-    const { content, rating } = req.body;
+    const { comment, rating } = req.body;
 
     if (!isValidObjectId(listingId) || !isValidObjectId(userId)) {
       return renderError(res, 'Invalid property or user ID.');
@@ -32,7 +32,7 @@ export async function create(req, res, next) {
     }
 
     // XSS filter for content
-    const sanitizedContent = xss(content);
+    const sanitizedContent = xss(comment);
     if (!sanitizedContent || sanitizedContent.length < 2) {
       return renderError(res, 'Review content cannot be empty.');
     }
@@ -42,7 +42,7 @@ export async function create(req, res, next) {
 
     const review = new Review({
       listingId: listingId,
-      user: userId,
+      guestId: userId,
       content: sanitizedContent,
       rating: Number(rating)
     });
@@ -102,7 +102,7 @@ export async function userReviews(req, res, next) {
       return renderError(res, 'Invalid user ID.');
     }
 
-    const total = await Review.countDocuments({ user: userId });
+    const total = await Review.countDocuments({ guestId: userId });
     const reviews = await Review.find({ guestId: userId })
       .populate('property', 'name')
       .sort({ createdAt: -1 }) 
@@ -112,14 +112,14 @@ export async function userReviews(req, res, next) {
     const user = await User.findById(userId);
 
     res.render('reviews/user_reviews', {
-      guestId,
       reviews,
       pagination: {
         total,
         page,
         limit,
         totalPages: Math.ceil(total / limit)
-      }
+      },
+      layout: false
     });
   } catch (err) {
     next(err);

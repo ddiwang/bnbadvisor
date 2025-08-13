@@ -20,6 +20,8 @@ router.post('/:id/like', async (req, res) => {
   }
 });
 
+// 新增评论
+router.post('/user/addReview', reviewController.create);
 
 // 评论详情
 router.get('/:reviewId', reviewController.show);

@@ -76,10 +76,22 @@
       <!-- Extension Area for Reviews/Ratings -->
       <div class="profile-section" id="reviews-extension">
         <h3>Reviews & Activity</h3>
-        <p>Extension area for reviews and user activity features.</p>
         <!-- Placeholder for reviews system -->
         <div id="user-reviews-extension"></div>
       </div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const userId = "{{user._id}}";
+          fetch(`/reviews/user/${userId}`)
+          .then(res => res.text()) // 注意是text！
+          .then(html => {
+        document.getElementById("user-reviews-extension").innerHTML = html;
+        })
+        .catch(() => {
+      document.getElementById("user-reviews-extension").innerHTML = "加载评论失败";
+       });
+      });
+      </script> 
 
       <!-- Logout -->
       <div class="profile-section">
