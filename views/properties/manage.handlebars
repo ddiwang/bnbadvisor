@@ -28,7 +28,7 @@
   <!-- Add New Property Form (Hidden by default) -->
   <div id="addPropertyForm" class="form-section" style="display: none;">
     <h3>Add New Property</h3>
-    <form method="POST" action="/properties/manage">
+    <form method="POST" action="/properties/manage" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-group">
           <label for="title" class="form-label">Property Title *</label>
@@ -153,6 +153,14 @@
         <small class="form-help">Separate amenities with commas</small>
       </div>
 
+      <div class="form-group">
+                    <label for="propertyImage">Add Photos</label>
+                    <input type="file" id="propertyImage" name="propertyImage[]" accept="image/*" multiple>
+                    <small style="color: #666; font-size: 14px;">You can select one or more images.</small>
+      </div>
+      <!--image Preview -->
+      <div id="imagePreview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom:10px;"></div>
+
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Add Property</button>
         <button type="button" id="cancelAdd" class="btn btn-ghost">Cancel</button>
@@ -246,6 +254,24 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+document.getElementById('propertyImage').addEventListener('change', function(e){
+            const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
+            for(const file of this.files) {
+            const reader = new FileReader();
+                reader.onload = function(evt) {
+            const img = document.createElement('img');
+                    img.src = evt.target.result;
+                    img.style.width = '90px';
+                    img.style.height = '90px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    preview.appendChild(img);
+            };
+                reader.readAsDataURL(file);
+        }
+});
+
 function editProperty(propertyId) {
   window.location.href = `/properties/manage/${propertyId}/edit`;
 }
@@ -260,6 +286,8 @@ function deleteProperty(propertyId, title) {
     form.submit();
   }
 }
+
+
 </script>
 
 <style>

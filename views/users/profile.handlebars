@@ -155,6 +155,26 @@
     <a href="/" class="btn btn-ghost">← Back to Home</a>
   </div>
 </div>
+<div id="reviewEditModal" class="modal" style="display:none;position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;justify-content:center;align-items:center;background:rgba(0,0,0,0.3)">
+  <div class="modal-content" style="background:white;padding:24px;border-radius:8px;min-width:250px;max-width:95vw;">
+    <h4>Edit Review</h4>
+    <form id="editReviewForm">
+      <input type="hidden" id="editReviewId">
+      <div class="form-group">
+        <label for="editReviewRating">Rating (1-5):</label>
+        <input type="number" id="editReviewRating" min="1" max="5" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="editReviewComment">Comment:</label>
+        <textarea id="editReviewComment" rows="3" required class="form-control"></textarea>
+      </div>
+      <div style="margin-top: 16px; text-align: right;">
+        <button type="button" class="btn btn-link" id="cancelEditBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Profile Page Styles -->
 <style>
@@ -352,6 +372,10 @@ function displayUserReviews(reviews) {
         </div>
       </div>
       <div class="review-comment">"${review.comment}"</div>
+      <div class="review-actions" style="margin-top:8px;">
+        <button class="btn btn-sm btn-secondary edit-review-btn" data-review-id="${review._id}" data-rating="${review.rating}" data-comment="${encodeURIComponent(review.comment)}">Edit</button>
+        <button class="btn btn-sm btn-danger delete-review-btn" data-review-id="${review._id}">Delete</button>
+      </div>
     </div>
   `).join('');
   
@@ -359,6 +383,9 @@ function displayUserReviews(reviews) {
     <h4>Recent Reviews (${reviews.length})</h4>
     ${reviewsHtml}
   `;
+
+  // 绑定事件
+  setTimeout(bindReviewActionEvents, 10); // 等 DOM 更新后再绑定
 }
 
 function displayPropertyReviews(reviews) {
@@ -403,5 +430,79 @@ function formatDate(dateString) {
     month: 'short', 
     day: 'numeric' 
   });
+}
+
+function bindReviewActionEvents() {
+  // 删除
+  document.querySelectorAll('.delete-review-btn').forEach(btn => {
+    btn.onclick = async function() {
+      const reviewId = btn.getAttribute('data-review-id');
+      if (!reviewId) return;
+      if (!confirm('Are you sure you want to delete this review?')) return;
+      try {
+        const res = await fetch(`/reviews/${reviewId}`, { method: 'DELETE' });
+        if (res.ok) {
+          // 重新加载
+          loadUserStats('{{user._id}}');
+        } else {
+          alert('Failed to delete review.');
+        }
+      } catch(err) {
+        alert('Delete failed');
+      }
+    }
+  });
+
+  // 编辑
+  document.querySelectorAll('.edit-review-btn').forEach(btn => {
+    btn.onclick = function() {
+      const reviewId = btn.getAttribute('data-review-id');
+      const rating = btn.getAttribute('data-rating');
+      const comment = decodeURIComponent(btn.getAttribute('data-comment'));
+      showEditModal(reviewId, rating, comment);
+    }
+  });
+}
+
+
+function showEditModal(reviewId, rating, comment) {
+  document.getElementById('reviewEditModal').style.display = 'flex';
+  document.getElementById('editReviewId').value = reviewId;
+  document.getElementById('editReviewRating').value = rating;
+  document.getElementById('editReviewComment').value = comment;
+}
+
+function hideEditModal() {
+  document.getElementById('reviewEditModal').style.display = 'none';
+}
+
+document.getElementById('cancelEditBtn').onclick = function() {
+  hideEditModal();
+}
+
+// 提交修改
+document.getElementById('editReviewForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const reviewId = document.getElementById('editReviewId').value;
+  const rating = document.getElementById('editReviewRating').value;
+  const comment = document.getElementById('editReviewComment').value;
+
+  try {
+    const res = await fetch(`/reviews/${reviewId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ rating, comment })
+    });
+    if (res.ok) {
+      hideEditModal();
+      loadUserStats('{{user._id}}');
+    } else {
+      alert('Failed to update review.');
+    }
+  } catch (err) {
+    alert('Error updating review.');
+  }
 }
 </script>

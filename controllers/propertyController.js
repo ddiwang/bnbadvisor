@@ -58,6 +58,11 @@ export const createPropertyFromForm = async (req, res) => {
         const amenitiesArray = amenities 
             ? amenities.split(',').map(a => a.trim()).filter(a => a.length > 0)
             : [];
+        let images = [];
+        if (req.files && req.files.length > 0) {
+              images = req.files.map(file => file.path);
+        }
+        // property.images = images; // 保存到你的 model 里
 
         const newProperty = new Property({ 
             title: title.trim(), 
@@ -69,7 +74,8 @@ export const createPropertyFromForm = async (req, res) => {
             bedrooms: Number(bedrooms) || 0, 
             bathrooms: Number(bathrooms) || 0, 
             amenities: amenitiesArray,
-            owner: userId
+            owner: userId,
+            images: images
         });
         
         await newProperty.save();
@@ -135,6 +141,7 @@ export const getEditProperty = async (req, res) => {
 };
 
 export const updatePropertyFromForm = async (req, res) => {
+
     const userId = req.session.user?._id;
     const propertyId = req.params.id;
     const { title, description, type, city, pricePerNight, maxGuests, bedrooms, bathrooms, amenities } = req.body;
@@ -167,6 +174,15 @@ export const updatePropertyFromForm = async (req, res) => {
             ? amenities.split(',').map(a => a.trim()).filter(a => a.length > 0)
             : [];
 
+        // 处理图片
+        let images = property.images || [];
+            if (req.files && req.files.length > 0) {
+            // 拼接图片的服务器URL
+            const newImgs = req.files.map(f => '/uploads/' + f.filename);
+            images = images.concat(newImgs); // 可保留历史图片或覆盖，按需
+        }
+
+
         // Update the property
         const updatedProperty = await Property.findByIdAndUpdate(
             propertyId,
@@ -179,7 +195,8 @@ export const updatePropertyFromForm = async (req, res) => {
                 maxGuests: Number(maxGuests),
                 bedrooms: Number(bedrooms) || 0,
                 bathrooms: Number(bathrooms) || 0,
-                amenities: amenitiesArray
+                amenities: amenitiesArray,
+                images: images
             },
             { new: true, runValidators: true }
         );

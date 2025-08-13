@@ -252,10 +252,22 @@
             <p class="description">{{property.description}}</p>
         </div>
 
+        {{!-- 如果 property.images 存在并且非空，遍历展示 --}}
+        {{#if property.images.length}}
+            <div class="property-info">Property Images:</div>
+            <div class="property-images" style="margin-bottom:20px;">
+        {{#each property.images}}
+            <img src="{{this}}" alt="Property Image" class="property-image" style="max-width:200px; margin-right:10px; margin-bottom:10px; border-radius:5px; border:1px solid #eee;">
+        {{/each}}
+            </div>
+        {{/if}}
+
         <div class="property-info">Property Type: {{property.type}}</div>
         <div class="property-info">Max Guests: {{property.maxGuests}}</div>
         <div class="property-info">Bedrooms: {{property.bedrooms}}</div>
         <div class="property-info">Bathrooms: {{property.bathrooms}}</div>
+
+        
         
         <!-- Reviews Section -->
         <div class="reviews-section">
