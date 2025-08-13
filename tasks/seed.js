@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Property from '../models/Property.js';
 
-const MONGO_URI = 'mongodb://localhost:27017/mydb';
+const MONGO_URI = 'mongodb://localhost:27017/bnbadvisor';
 
 const seedData = [
   { title: 'Sunny Villa', city: 'Los Angeles', description: 'Beautiful stay in LA', rating: 4.8 },
@@ -21,10 +21,10 @@ const seedDatabase = async () => {
     await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     await Property.deleteMany({});
     await Property.insertMany(seedData);
-    console.log('✅ Seed data inserted!');
+    console.log('Seed data inserted!');
     mongoose.connection.close();
   } catch (err) {
-    console.error('❌ Error inserting seed data:', err);
+    console.error('Error inserting seed data:', err);
   }
 };
 

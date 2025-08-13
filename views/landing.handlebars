@@ -23,7 +23,7 @@
   <ul>
     {{#each featured}}
     <li>
-      <a href="/properties/{{this._id}}">
+      <a href="/property/{{this._id}}">
       {{this.title}} - {{this.city}} - Rating: {{this.rating}}
       </a>
     </li>
@@ -36,14 +36,12 @@
   function validateForm() {
     const keyword = document.getElementById("keyword").value.trim();
     const city = document.getElementById("city").value;
-
-    // Optional: make at least one field required
     if (!keyword && !city) {
       alert("Please enter a keyword or select a city.");
       return false;
     }
 
-    // Optional: prevent numbers-only search
+    // Optional
     if (/^\d+$/.test(keyword)) {
       alert("Keyword should not be only numbers.");
       return false;

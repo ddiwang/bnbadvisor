@@ -101,7 +101,6 @@ router.post('/login', sanitizeInput, async (req, res) => {
       });
     }
     
-  
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).render('users/login', {
@@ -132,6 +131,7 @@ router.post('/login', sanitizeInput, async (req, res) => {
     
     res.redirect('/users/profile');
   } catch (error) {
+    console.error('Login error:', error);
     res.status(401).render('users/login', {
       title: 'Login - BNB Advisor',
       error: error.message,
@@ -169,19 +169,31 @@ router.post('/signup', sanitizeInput, async (req, res) => {
       });
     }
     
+    // Enhanced validation
+    if (firstName.trim().length < 2) {
+      throw new Error('First name must be at least 2 characters long');
+    }
+    
+    if (lastName.trim().length < 2) {
+      throw new Error('Last name must be at least 2 characters long');
+    }
+    
+    if (password.length < 6) {
+      throw new Error('Password must be at least 6 characters long');
+    }
+    
     const userData = {
-      firstName,
-      lastName,
-      email,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.toLowerCase().trim(),
       password,
       role
     };
     
-    // Create login new user 
+    // Create new user 
     const newUser = new User(userData);
     await newUser.save();
     
-   
     req.session.user = {
       _id: newUser._id,
       firstName: newUser.firstName,
@@ -192,10 +204,11 @@ router.post('/signup', sanitizeInput, async (req, res) => {
     
     res.redirect('/users/profile');
   } catch (error) {
+    console.error('Signup error:', error);
     let errorMessage = error.message;
     
     // duplicate key error for email
-    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+    if (error.code === 11000 && error.keyPattern?.email) {
       errorMessage = 'This email address is already registered. Please use a different email or try logging in.';
     }
     
@@ -252,14 +265,9 @@ router.post('/profile', sanitizeInput, async (req, res) => {
   try {
     const { firstName, lastName } = req.body;
     
-    const updateData = {
-      firstName,
-      lastName
-    };
-    
     const updatedUser = await User.findByIdAndUpdate(
-      req.session.user._id, 
-      updateData,
+      req.session.user._id,
+      { firstName, lastName },
       { new: true, runValidators: true }
     );
     
@@ -279,6 +287,7 @@ router.post('/profile', sanitizeInput, async (req, res) => {
     });
   } catch (error) {
     console.error('Profile update error:', error);
+    
     try {
       const user = await User.findById(req.session.user._id);
       res.status(400).render('users/profile', {
