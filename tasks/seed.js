@@ -88,6 +88,7 @@ const seed = async () => {
           user: shuffledGuests[j % guests.length]._id,
           rating: Math.floor(Math.random() * 5) + 1,
           comment: reviewTexts[Math.floor(Math.random() * reviewTexts.length)],
+          likes: Math.floor(Math.random() * 21) 
         });
         reviewCount++;
       }

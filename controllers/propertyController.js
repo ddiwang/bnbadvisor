@@ -171,10 +171,10 @@ export const updatePropertyFromForm = async (req, res) => {
         const updatedProperty = await Property.findByIdAndUpdate(
             propertyId,
             {
-                title: title.trim(),
-                description: description.trim(),
-                type,
-                city: city.trim(),
+                title: sanitizeInput(title).trim(),
+                description: sanitizeInput(description).trim(),
+                type: sanitizeInput(type).trim(),
+                city: sanitizeInput(city).trim(),
                 pricePerNight: Number(pricePerNight),
                 maxGuests: Number(maxGuests),
                 bedrooms: Number(bedrooms) || 0,
@@ -257,11 +257,11 @@ export const createProperty = async (req, res) => {
         }
 
         const newProperty = new Property({ 
-            title, 
-            description, 
-            type, 
-            address, 
-            city, 
+            title: sanitizeInput(title),
+            description: sanitizeInput(description),
+            type: sanitizeInput(type),
+            address: sanitizeInput(address),
+            city: sanitizeInput(city),
             pricePerNight, 
             maxGuests, 
             bedrooms, 
@@ -340,8 +340,20 @@ export const deleteProperty = async (req, res) => {
 };
 
 export const getPropertyById = async (req, res) => {
+    // try {
+    //     const property = await Property.findById(req.params.id);
+    //     if (!property) {
+    //         return res.status(404).json({ message: 'Property not found' });
+    //     }
+    //     res.status(200).json(property);
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ message: 'Internal server error' });
+    // }
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await Property.findById(req.params.id)
+            .populate('owner', 'username email')
+            .populate({ path: 'reviews', populate: { path: 'user', select: 'username' } });
         if (!property) {
             return res.status(404).json({ message: 'Property not found' });
         }
@@ -353,8 +365,17 @@ export const getPropertyById = async (req, res) => {
 };
 
 export const getAllProperties = async (req, res) => {
+    // try {
+    //     const properties = await Property.find();
+    //     res.status(200).json(properties);
+    // } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ message: 'Internal server error' });
+    // }
     try {
-        const properties = await Property.find();
+        const properties = await Property.find()
+            .populate('owner', 'username email') // 让首页也有 owner 信息
+            .populate({ path: 'reviews', populate: { path: 'user', select: 'username' } });
         res.status(200).json(properties);
     } catch (error) {
         console.error(error);

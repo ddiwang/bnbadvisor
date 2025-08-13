@@ -143,3 +143,21 @@ export const deleteReview = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+export const likeReview = async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ success: false, message: 'Review not found' });
+    }
+
+    review.likes += 1;
+    await review.save();
+
+    res.json({ success: true, likes: review.likes });
+  } catch (error) {
+    console.error('Error liking review:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};

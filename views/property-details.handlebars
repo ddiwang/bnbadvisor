@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{property.title}} - BNB Advisor</title>
@@ -9,7 +10,7 @@
             margin: 20px;
             background-color: #f5f5f5;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -17,73 +18,73 @@
             padding: 20px;
             border-radius: 5px;
         }
-        
+
         .header {
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
             margin-bottom: 20px;
         }
-        
+
         .back-link {
             color: #0066cc;
             text-decoration: none;
             margin-bottom: 10px;
             display: inline-block;
         }
-        
+
         .back-link:hover {
             text-decoration: underline;
         }
-        
+
         .property-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
             color: #333;
         }
-        
+
         .property-location {
             color: #666;
             margin-bottom: 10px;
         }
-        
+
         .property-rating {
             color: #666;
             margin-bottom: 15px;
         }
-        
+
         .property-info {
             margin-bottom: 15px;
             color: #666;
         }
-        
+
         .description-section {
             margin-bottom: 20px;
         }
-        
+
         .description-title {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 10px;
             color: #333;
         }
-        
+
         .description {
             line-height: 1.5;
             color: #555;
         }
-        
+
         .reviews-section {
             margin-top: 20px;
         }
-        
+
         .reviews-title {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
             color: #333;
         }
-        
+
         .review-item {
             background: #f9f9f9;
             padding: 15px;
@@ -91,60 +92,60 @@
             border-radius: 5px;
             border-left: 3px solid #0066cc;
         }
-        
+
         .review-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
         }
-        
+
         .reviewer-name {
             font-weight: bold;
             color: #333;
         }
-        
+
         .review-rating {
             color: #666;
             font-size: 14px;
         }
-        
+
         .review-comment {
             color: #555;
             line-height: 1.4;
         }
-        
+
         .no-reviews {
             color: #999;
             font-style: italic;
             text-align: center;
             padding: 20px;
         }
-        
+
         .add-review-section {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 5px;
             margin-bottom: 30px;
         }
-        
+
         .add-review-section h3 {
             margin-top: 0;
             margin-bottom: 15px;
             color: #333;
         }
-        
+
         .review-form .form-group {
             margin-bottom: 15px;
         }
-        
+
         .form-label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 10px;
@@ -152,13 +153,13 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: #0066cc;
             box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
@@ -168,17 +169,18 @@
             text-decoration: none;
             display: inline-block;
         }
-        
+
         .btn-primary {
             background: #0066cc;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #0052a3;
         }
-        
-        .owner-notice, .login-notice {
+
+        .owner-notice,
+        .login-notice {
             background: #fff3cd;
             color: #856404;
             padding: 15px;
@@ -186,33 +188,33 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .login-notice a {
             color: #0066cc;
             text-decoration: none;
         }
-        
+
         .login-notice a:hover {
             text-decoration: underline;
         }
-        
+
         .reviews-list {
             margin-top: 20px;
         }
-        
+
         .alert {
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
             font-weight: bold;
         }
-        
+
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .alert-error {
             background-color: #f8d7da;
             color: #721c24;
@@ -220,29 +222,30 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         {{#if success}}
-            <div class="alert alert-success">
-                {{success}}
-            </div>
+        <div class="alert alert-success">
+            {{success}}
+        </div>
         {{/if}}
-        
+
         {{#if error}}
-            <div class="alert alert-error">
-                {{error}}
-            </div>
+        <div class="alert alert-error">
+            {{error}}
+        </div>
         {{/if}}
-        
+
         <div class="header">
             <a href="/" class="back-link">← Back to Home</a>
             <h1 class="property-title">{{property.title}}</h1>
             <div class="property-location">Location: {{property.city}}</div>
             <div class="property-rating">
                 {{#if property.rating}}
-                    Rating: {{property.rating}}/5 ({{reviewCount}} review{{#unless (eq reviewCount 1)}}s{{/unless}})
+                Rating: {{property.rating}}/5 ({{reviewCount}} review{{#unless (eq reviewCount 1)}}s{{/unless}})
                 {{else}}
-                    No ratings yet
+                No ratings yet
                 {{/if}}
             </div>
         </div>
@@ -256,75 +259,92 @@
         <div class="property-info">Max Guests: {{property.maxGuests}}</div>
         <div class="property-info">Bedrooms: {{property.bedrooms}}</div>
         <div class="property-info">Bathrooms: {{property.bathrooms}}</div>
-        
+
         <!-- Reviews Section -->
         <div class="reviews-section">
             <h2 class="reviews-title">Reviews ({{reviewCount}})</h2>
-            
+
             <!-- Add Review Form (only if user is logged in and not the property owner) -->
             {{#if user}}
-                {{#unless isPropertyOwner}}
-                    <div class="add-review-section">
-                        <h3>Write a Review</h3>
-                        <form method="POST" action="/reviews/add" class="review-form">
-                            <input type="hidden" name="propertyId" value="{{property._id}}">
-                            
-                            <div class="form-group">
-                                <label for="rating" class="form-label">Rating *</label>
-                                <select name="rating" id="rating" required class="form-control">
-                                    <option value="">Select Rating</option>
-                                    <option value="5">5 - Excellent</option>
-                                    <option value="4">4 - Very Good</option>
-                                    <option value="3">3 - Good</option>
-                                    <option value="2">2 - Fair</option>
-                                    <option value="1">1 - Poor</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="comment" class="form-label">Comment *</label>
-                                <textarea 
-                                    name="comment" 
-                                    id="comment" 
-                                    required 
-                                    rows="4" 
-                                    maxlength="500"
-                                    class="form-control"
-                                    placeholder="Share your experience with this property..."
-                                ></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary">Submit Review</button>
-                        </form>
+            {{#unless isPropertyOwner}}
+            <div class="add-review-section">
+                <h3>Write a Review</h3>
+                <form method="POST" action="/reviews/add" class="review-form">
+                    <input type="hidden" name="propertyId" value="{{property._id}}">
+
+                    <div class="form-group">
+                        <label for="rating" class="form-label">Rating *</label>
+                        <select name="rating" id="rating" required class="form-control">
+                            <option value="">Select Rating</option>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="3">3 - Good</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
                     </div>
-                {{else}}
-                    <div class="owner-notice">
-                        <p>You cannot review your own property.</p>
+
+                    <div class="form-group">
+                        <label for="comment" class="form-label">Comment *</label>
+                        <textarea name="comment" id="comment" required rows="4" maxlength="500" class="form-control"
+                            placeholder="Share your experience with this property..."></textarea>
                     </div>
-                {{/unless}}
+
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
             {{else}}
-                <div class="login-notice">
-                    <p><a href="/users/login">Sign in</a> to write a review.</p>
-                </div>
+            <div class="owner-notice">
+                <p>You cannot review your own property.</p>
+            </div>
+            {{/unless}}
+            {{else}}
+            <div class="login-notice">
+                <p><a href="/users/login">Sign in</a> to write a review.</p>
+            </div>
             {{/if}}
-            
+
             <!-- Existing Reviews -->
             {{#if reviews.length}}
-                <div class="reviews-list">
-                    {{#each reviews}}
-                    <div class="review-item">
-                        <div class="review-header">
-                            <div class="reviewer-name">{{this.user.firstName}} {{this.user.lastName}}</div>
-                            <div class="review-rating">Rating: {{this.rating}}/5</div>
-                        </div>
-                        <div class="review-comment">{{this.comment}}</div>
+            <div class="reviews-list">
+                {{#each reviews}}
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-name">{{this.user.firstName}} {{this.user.lastName}}</div>
+                        <div class="review-rating">Rating: {{this.rating}}/5</div>
                     </div>
-                    {{/each}}
+                    <div class="review-comment">{{this.comment}}</div>
+                    <button class="like-btn" data-id="{{this._id}}">
+                        👍 Like (<span id="likes-{{this._id}}">{{this.likes}}</span>)
+                    </button>
                 </div>
+                {{/each}}
+            </div>
             {{else}}
-                <div class="no-reviews">No reviews yet</div>
+            <div class="no-reviews">No reviews yet</div>
             {{/if}}
         </div>
     </div>
 </body>
-</html>
+
+
+<!-- 引入点赞逻辑 -->
+<script src="/js/review.js"></script>
+
+<script>
+    // 用于点赞更新的AJAX请求
+    function likeReview(reviewId) {
+        fetch(`/reviews/${reviewId}/like`, {
+            method: 'POST',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // 更新点赞数
+                    document.getElementById(`likes-${reviewId}`).textContent = `Likes: ${data.likes}`;
+                }
+            });
+    }
+
+
+</html >
