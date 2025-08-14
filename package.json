@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node ./tasks/seed.js",
+    "start": "node server.js"
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Group 3: LI Xiang, MA Yanzhao, SU Xiaoqing, WANG Di",
   "license": "ISC",
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",

@@ -12,16 +12,13 @@ const seed = async () => {
     await mongoose.connect(MONGO_URI);
     console.log('Connected to DB');
 
-    // 清空旧数据
     await User.deleteMany({});
     await Property.deleteMany({});
     await Review.deleteMany({});
     console.log('Old data cleared');
 
-    // 创建加密密码
     const passwordHash = await bcrypt.hash('123456', 12);
 
-    // 创建用户
     const managers = await User.insertMany([
       { firstName: 'Alice', lastName: 'Manager', email: 'alice.manager@example.com', password: passwordHash, role: 'manager' },
       { firstName: 'Bob', lastName: 'Manager', email: 'bob.manager@example.com', password: passwordHash, role: 'manager' },
@@ -37,7 +34,6 @@ const seed = async () => {
 
     console.log('Users created');
 
-    // 创建房源数据
     const propertyData = [
   {
     title: 'Cozy Countryside Cottage',
@@ -162,7 +158,6 @@ const seed = async () => {
 ];
 
 
-    // 随机分配给 manager
     const properties = await Property.insertMany(
       propertyData.map((p, idx) => ({
         ...p,
@@ -172,7 +167,6 @@ const seed = async () => {
 
     console.log('Properties created');
 
-    // 创建评论
     const reviewTexts = [
       'Amazing place, would visit again!',
       'Very comfortable and well located.',
@@ -189,7 +183,6 @@ const seed = async () => {
     const reviews = [];
     let reviewCount = 0;
     for (let i = 0; i < properties.length && reviewCount < 20; i++) {
-      // 每个房源添加 1-4 条评论
       const numReviews = Math.floor(Math.random() * 4) + 1;
       const shuffledGuests = guests.sort(() => 0.5 - Math.random());
 
@@ -212,9 +205,9 @@ const seed = async () => {
       const propertyReviews = reviews.filter(r => r.property.toString() === property._id.toString());
       if (propertyReviews.length > 0) {
         const avg = propertyReviews.reduce((sum, r) => sum + r.rating, 0) / propertyReviews.length;
-        property.rating = Number(avg.toFixed(1)); // 保留一位小数
+        property.rating = Number(avg.toFixed(1));
       } else {
-        property.rating = 0; // 没有评论的房源评分为 0
+        property.rating = 0;
       }
       await property.save();
     }
