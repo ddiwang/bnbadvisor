@@ -16,7 +16,7 @@
       <option value="{{this}}">{{this}}</option>
       {{/each}}
     </select>
-    <button type="submit">Filter</button>
+    <button type="submit">FILTER</button>
   </form>
 
   <h2>Top Rated BNB</h2>
@@ -50,38 +50,3 @@
     return true;
   }
 </script>
-
-{{!--
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>Landing</title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-
-<body>
-  <header>
-    <nav>
-      <a href="/signin">Sign In</a> | <a href="/signup">Sign Up</a>
-    </nav>
-    <h1>Welcome to BNB Review</h1>
-    <form action="/listings" method="get">
-      <input type="text" name="keyword" placeholder="Search by keyword">
-      <input type="text" name="city" placeholder="Filter by city">
-      <button type="submit">Search</button>
-    </form>
-  </header>
-
-  <section>
-    <h2>Top Rated BNBs</h2>
-    <ul>
-      {{#each featured}}
-      <li>{{this.title}} - {{this.city}} - Rating: {{this.rating}}</li>
-      {{/each}}
-    </ul>
-  </section>
-</body>
-
-</html>
---}}
