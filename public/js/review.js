@@ -22,4 +22,29 @@ document.addEventListener('DOMContentLoaded', () => {
           });
       });
     });
+
+
+  document.querySelectorAll('.delete-review-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const reviewId = button.dataset.id;
+
+      fetch(`/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert(data.message || 'Failed to delete review');
+          }
+        })
+        .catch(err => {
+          console.error('Error deleting review:', err);
+        });
+    });
   });
+});

@@ -4,7 +4,7 @@ import xss from 'xss';
 
 export const getLandingPage = async (req, res) => {
   try {
-    const featured = await Property.find().sort({ rating: -1 }).limit(5);
+    const featured = await Property.find().sort({ rating: -1 }).limit(5).lean();
     //dynamic city list
     const cities = await Property.distinct("city");
 
