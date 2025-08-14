@@ -5,7 +5,8 @@ import {
     getReviewById,
     getReviewsByProperty,
     updateReview,
-    deleteReview
+    deleteReview,
+    likeReview
 } from '../controllers/reviewController.js';
 
 const router = Router();
@@ -32,5 +33,28 @@ router.put('/:id', sanitizeInput, updateReview);
 
 // Delete a review
 router.delete('/:id', deleteReview);
+
+// 点赞接口
+// router.post('/:id/like', async (req, res) => {
+//   try {
+//     const review = await Reviews.findById(req.params.id);
+//     if (!review) {
+//       return res.status(404).json({ success: false, message: 'Review not found' });
+//     }
+
+//     review.likes += 1;
+//     await review.save();
+
+//     res.json({ success: true, likes: review.likes });
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: err.message });
+//   }
+// });
+
+//router.post('/reviews/:id/like', likeReview);
+router.post('/:id/like', likeReview);
+
+
+
 
 export default router;

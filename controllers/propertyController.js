@@ -37,7 +37,7 @@ export const getManageProperties = async (req, res) => {
     }
 };
 
-export const createPropertyFromForm = async (req, res) => {
+export const createPropertyFromForm = async (req, res,next) => {
     const { title, description, type, city, pricePerNight, maxGuests, bedrooms, bathrooms, amenities } = req.body;
     const userId = req.session.user?._id;
     
@@ -65,10 +65,10 @@ export const createPropertyFromForm = async (req, res) => {
         // property.images = images; // 保存到你的 model 里
 
         const newProperty = new Property({ 
-            title: title.trim(), 
-            description: description.trim(), 
-            type, 
-            city: city.trim(), 
+            title: title.trim(),
+            description: description.trim(),
+            type,
+            city: city.trim(),
             pricePerNight: Number(pricePerNight), 
             maxGuests: Number(maxGuests), 
             bedrooms: Number(bedrooms) || 0, 
@@ -140,7 +140,7 @@ export const getEditProperty = async (req, res) => {
     }
 };
 
-export const updatePropertyFromForm = async (req, res) => {
+export const updatePropertyFromForm = async (req, res,next) => {
 
     const userId = req.session.user?._id;
     const propertyId = req.params.id;
@@ -274,11 +274,10 @@ export const createProperty = async (req, res) => {
         }
 
         const newProperty = new Property({ 
-            title, 
-            description, 
-            type, 
-            address, 
-            city, 
+            title: title.trim(),
+            description: description.trim(),
+            type,
+            city: city.trim(),
             pricePerNight, 
             maxGuests, 
             bedrooms, 

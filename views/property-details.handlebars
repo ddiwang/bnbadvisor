@@ -330,6 +330,9 @@
                             <div class="review-rating">Rating: {{this.rating}}/5</div>
                         </div>
                         <div class="review-comment">{{this.comment}}</div>
+                        <button class="like-btn" data-id="{{this._id}}">
+                        👍 Like (<span id="likes-{{this._id}}">{{this.likes}}</span>)
+                    </button>
                     </div>
                     {{/each}}
                 </div>
@@ -340,3 +343,23 @@
     </div>
 </body>
 </html>
+
+
+<!-- 引入点赞逻辑 -->
+<script src="/js/review.js"></script>
+
+<script>
+    // 用于点赞更新的AJAX请求
+    function likeReview(reviewId) {
+        fetch(`/reviews/${reviewId}/like`, {
+            method: 'POST',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // 更新点赞数
+                    document.getElementById(`likes-${reviewId}`).textContent = `Likes: ${data.likes}`;
+                }
+            });
+    }
+

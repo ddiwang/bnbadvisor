@@ -39,17 +39,128 @@ const seed = async () => {
 
     // 创建房源数据
     const propertyData = [
-      { title: 'Cozy Countryside Cottage', city: 'Beijing', description: 'A quiet place with fresh air', pricePerNight: 80, rating: 4.7 },
-      { title: 'Luxury Downtown Condo', city: 'Los Angeles', description: 'Right in the heart of the city', pricePerNight: 200, rating: 4.8 },
-      { title: 'Mountain Cabin Retreat', city: 'Beijing', description: 'Perfect for nature lovers', pricePerNight: 120, rating: 4.6 },
-      { title: 'Sunny Beach House', city: 'Los Angeles', description: 'Enjoy the sunshine and ocean', pricePerNight: 250, rating: 4.9 },
-      { title: 'Modern City Apartment', city: 'Beijing', description: 'Stylish and convenient', pricePerNight: 150, rating: 4.3 },
-      { title: 'Traditional Ryokan', city: 'Tokyo', description: 'Experience Japanese culture', pricePerNight: 180, rating: 4.5 },
-      { title: 'Shinjuku Loft', city: 'Tokyo', description: 'Close to all attractions', pricePerNight: 170, rating: 4.4 },
-      { title: 'Central Park View', city: 'New York', description: 'Amazing park views', pricePerNight: 300, rating: 4.8 },
-      { title: 'Historic Brownstone', city: 'New York', description: 'Classic charm with modern amenities', pricePerNight: 280, rating: 4.7 },
-      { title: 'Times Square Studio', city: 'New York', description: 'Right in the action', pricePerNight: 220, rating: 4.6 },
-    ];
+  {
+    title: 'Cozy Countryside Cottage',
+    description: 'A quiet place with fresh air, perfect for a weekend getaway.',
+    type: 'house',
+    city: 'Beijing',
+    pricePerNight: 80,
+    maxGuests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Heating'],
+    houseRules: ['No smoking', 'No pets']
+  },
+  {
+    title: 'Luxury Downtown Condo',
+    description: 'Right in the heart of the city with stunning skyline views.',
+    type: 'condo',
+    city: 'Los Angeles',
+    pricePerNight: 200,
+    maxGuests: 6,
+    bedrooms: 3,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Air Conditioning', 'Pool', 'Gym'],
+    houseRules: ['No smoking', 'No loud parties']
+  },
+  {
+    title: 'Mountain Cabin Retreat',
+    description: 'Perfect for nature lovers, surrounded by forests and trails.',
+    type: 'cabin',
+    city: 'Beijing',
+    pricePerNight: 120,
+    maxGuests: 5,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['Fireplace', 'Kitchen', 'Parking'],
+    houseRules: ['No smoking', 'Pets allowed']
+  },
+  {
+    title: 'Sunny Beach House',
+    description: 'Enjoy the sunshine and ocean right at your doorstep.',
+    type: 'villa',
+    city: 'Los Angeles',
+    pricePerNight: 250,
+    maxGuests: 8,
+    bedrooms: 4,
+    bathrooms: 3,
+    amenities: ['WiFi', 'BBQ Grill', 'Private Beach', 'Air Conditioning'],
+    houseRules: ['No smoking']
+  },
+  {
+    title: 'Modern City Apartment',
+    description: 'Stylish and convenient apartment in the city center.',
+    type: 'apartment',
+    city: 'Beijing',
+    pricePerNight: 150,
+    maxGuests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Washing Machine'],
+    houseRules: ['No pets', 'No smoking']
+  },
+  {
+    title: 'Traditional Ryokan',
+    description: 'Experience authentic Japanese culture with tatami rooms.',
+    type: 'house',
+    city: 'Tokyo',
+    pricePerNight: 180,
+    maxGuests: 3,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ['Onsen', 'WiFi', 'Traditional Meals'],
+    houseRules: ['No shoes inside', 'Quiet after 10pm']
+  },
+  {
+    title: 'Shinjuku Loft',
+    description: 'Modern loft close to all attractions and nightlife.',
+    type: 'loft',
+    city: 'Tokyo',
+    pricePerNight: 170,
+    maxGuests: 2,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Air Conditioning'],
+    houseRules: ['No smoking', 'No pets']
+  },
+  {
+    title: 'Central Park View',
+    description: 'Amazing park views from a stylish city apartment.',
+    type: 'apartment',
+    city: 'New York',
+    pricePerNight: 300,
+    maxGuests: 5,
+    bedrooms: 2,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Elevator', 'Doorman'],
+    houseRules: ['No smoking']
+  },
+  {
+    title: 'Historic Brownstone',
+    description: 'Classic charm with modern amenities in a historic building.',
+    type: 'house',
+    city: 'New York',
+    pricePerNight: 280,
+    maxGuests: 6,
+    bedrooms: 3,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Kitchen', 'Backyard'],
+    houseRules: ['No smoking', 'No loud parties']
+  },
+  {
+    title: 'Times Square Studio',
+    description: 'Right in the action with easy access to theaters and dining.',
+    type: 'apartment',
+    city: 'New York',
+    pricePerNight: 220,
+    maxGuests: 2,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Air Conditioning', 'Heating'],
+    houseRules: ['No smoking', 'No pets']
+  }
+];
+
 
     // 随机分配给 manager
     const properties = await Property.insertMany(
@@ -88,6 +199,7 @@ const seed = async () => {
           user: shuffledGuests[j % guests.length]._id,
           rating: Math.floor(Math.random() * 5) + 1,
           comment: reviewTexts[Math.floor(Math.random() * reviewTexts.length)],
+          likes: Math.floor(Math.random() * 21)
         });
         reviewCount++;
       }
@@ -95,6 +207,17 @@ const seed = async () => {
 
     await Review.insertMany(reviews);
     console.log('Reviews created');
+
+    for (const property of properties) {
+      const propertyReviews = reviews.filter(r => r.property.toString() === property._id.toString());
+      if (propertyReviews.length > 0) {
+        const avg = propertyReviews.reduce((sum, r) => sum + r.rating, 0) / propertyReviews.length;
+        property.rating = Number(avg.toFixed(1)); // 保留一位小数
+      } else {
+        property.rating = 0; // 没有评论的房源评分为 0
+      }
+      await property.save();
+    }
 
     console.log('=== Seed completed successfully ===');
     await mongoose.connection.close();
