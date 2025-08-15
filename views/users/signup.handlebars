@@ -1,0 +1,53 @@
+{{!-- User Registration Page --}}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Join BNB Advisor</h2>
+    
+    {{#if error}}
+      <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+    
+    <form method="POST" action="/users/signup">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName" value="{{formData.firstName}}" required minlength="2" maxlength="25" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" value="{{formData.lastName}}" required minlength="2" maxlength="25" class="form-control">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{formData.email}}" required class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="role">I am a:</label>
+        <select id="role" name="role" required class="form-control">
+          <option value="user" {{#if (eq formData.role 'user')}}selected{{/if}}>Guest</option>
+          <option value="manager" {{#if (eq formData.role 'manager')}}selected{{/if}}>Host</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="6" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6" class="form-control">
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+    
+    <div class="auth-links">
+      <p>Already have an account? <a href="/users/login">Login here</a></p>
+      <p><a href="/">← Back to Home</a></p>
+    </div>
+  </div>
+</div>

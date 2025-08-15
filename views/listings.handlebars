@@ -1,39 +1,139 @@
-<h1>BNB Found</h1>
-<h2>Search Results</h2>
-
-
-<main>
-  <ol>
-    {{#each results}}
-    <li>
-      <a href="/properties/{{this._id}}"></a>
-      {{this.title}} - {{this.city}} - Rating: {{this.rating}}
-      </a>
-    </li>
-    {{else}}
-    <li>not found any</li>
-    {{/each}}
-  </ol>
-</main>
-
-{{!--
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Listing</title>
+    <meta charset="UTF-8">
+    <title>Search Results - BNB Advisor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            color: #0066cc;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .property-item {
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        
+        .property-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .property-info {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .property-rating {
+            margin-bottom: 8px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .search-again-btn {
+            background: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        
+        .search-again-btn:hover {
+            background: #0052a3;
+        }
+        
+        .view-details-btn {
+            background: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .view-details-btn:hover {
+            background: #0052a3;
+        }
+    </style>
 </head>
-
 <body>
-  <h1>Search Results</h1>
-  <ul>
-    {{#each results}}
-    <li>{{this.name}} - {{this.city}} - Rating: {{this.rating}}</li>
-    {{else}}
-    <li>No results found</li>
-    {{/each}}
-  </ul>
-</body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-link">← Back to Home</a>
+            <h1>Search Results</h1>
+            <p>
+                {{#if results.length}}
+                    Found {{results.length}} properties
+                {{else}}
+                    No properties found
+                {{/if}}
+            </p>
+        </div>
 
+        {{#if results.length}}
+            {{#each results}}
+            <div class="property-item">
+                <div class="property-title">{{this.title}}</div>
+                <div class="property-info">Location: {{this.city}}</div>
+                <div class="property-info">Type: {{this.type}}</div>
+                <div class="property-info">Max Guests: {{this.maxGuests}}</div>
+                <div class="property-info">Bedrooms: {{this.bedrooms}} | Bathrooms: {{this.bathrooms}}</div>
+                <div class="property-rating">
+                    Rating: 
+                    {{#if this.rating}}
+                        {{this.rating}}/5
+                    {{else}}
+                        No ratings yet
+                    {{/if}}
+                </div>
+                <a href="/property/{{this._id}}" class="view-details-btn">View Details</a>
+            </div>
+            {{/each}}
+        {{else}}
+            <div class="no-results">
+                <h3>No Properties Found</h3>
+                <p>Try searching with different keywords.</p>
+                <a href="/" class="search-again-btn">Search Again</a>
+            </div>
+        {{/if}}
+    </div>
+</body>
 </html>
---}}

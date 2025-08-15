@@ -3,10 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{title}}</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
 </head>
 
 <body>
@@ -15,20 +17,39 @@
             <ul>
                 <li><a href="/">Home</a></li>
             </ul>
-
         </nav>
 
+        <div class="logo">BNB ADVISOR</div>
 
         <nav>
-            <a href="/signin">Sign In</a> | <a href="/signup">Sign Up</a>
+            <ul>
+                {{#if user}}
+                    <li class="nav-user">
+                        <a href="/users/profile">Welcome, {{user.firstName}}!</a>
+                        {{#if (eq user.role 'manager')}}
+                            <span class="user-role">Host</span>
+                        {{else}}
+                            <span class="user-role">Guest</span>
+                        {{/if}}
+                    </li>
+                    <li>
+                        <form method="POST" action="/users/logout" style="display: inline;">
+                            <button type="submit" class="logout-btn">Logout</button>
+                        </form>
+                    </li>
+                {{else}}
+                    <li><a href="/users/login">Sign In</a></li>
+                    <li><a href="/users/signup">Sign Up</a></li>
+                {{/if}}
+            </ul>
         </nav>
-        <p>BNB ADVISOR</p>
-
     </header>
 
     {{{body}}}
     <footer>CS546 FINAL PROJECT</footer>
-
+    
+    <!-- JavaScript files -->
+    <script src="/js/auth.js"></script>
 
 </body>
 

@@ -1,0 +1,29 @@
+{{!-- User Login Page --}}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Login to BNB Advisor</h2>
+    
+    {{#if error}}
+      <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+    
+    <form method="POST" action="/users/login">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{email}}" required class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required class="form-control">
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-full">Login</button>
+    </form>
+    
+    <div class="auth-links">
+      <p>Don't have an account? <a href="/users/signup">Sign up here</a></p>
+      <p><a href="/">← Back to Home</a></p>
+    </div>
+  </div>
+</div>

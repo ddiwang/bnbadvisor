@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pages.css">
+    <style>
+        .edit-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c5aa0;
+        }
+
+        .edit-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3f73;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .edit-container {
+                padding: 10px;
+            }
+            
+            .edit-form {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">BNB Advisor</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/properties/manage">My Properties</a>
+                <a href="/users/profile">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="edit-container">
+        <h1 class="edit-header">Edit Property</h1>
+
+        {{#if error}}
+            <div class="alert alert-error">{{error}}</div>
+        {{/if}}
+
+        <div class="edit-form">
+            <form method="POST" action="/properties/manage/{{property._id}}/edit" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Property Title *</label>
+                    <input type="text" id="title" name="title" value="{{property.title}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" required>{{property.description}}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type">Property Type *</label>
+                        <select id="type" name="type" required>
+                            <option value="apartment" {{#if (eq property.type 'apartment')}}selected{{/if}}>Apartment</option>
+                            <option value="house" {{#if (eq property.type 'house')}}selected{{/if}}>House</option>
+                            <option value="villa" {{#if (eq property.type 'villa')}}selected{{/if}}>Villa</option>
+                            <option value="cabin" {{#if (eq property.type 'cabin')}}selected{{/if}}>Cabin</option>
+                            <option value="loft" {{#if (eq property.type 'loft')}}selected{{/if}}>Loft</option>
+                            <option value="condo" {{#if (eq property.type 'condo')}}selected{{/if}}>Condo</option>
+                            <option value="other" {{#if (eq property.type 'other')}}selected{{/if}}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" value="{{property.city}}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pricePerNight">Price per Night ($)</label>
+                        <input type="number" id="pricePerNight" name="pricePerNight" value="{{property.pricePerNight}}" min="0" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxGuests">Max Guests *</label>
+                        <input type="number" id="maxGuests" name="maxGuests" value="{{property.maxGuests}}" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input type="number" id="bedrooms" name="bedrooms" value="{{property.bedrooms}}" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bathrooms">Bathrooms</label>
+                        <input type="number" id="bathrooms" name="bathrooms" value="{{property.bathrooms}}" min="0" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amenities">Amenities (comma-separated)</label>
+                    <input type="text" id="amenities" name="amenities" value="{{join property.amenities ', '}}" placeholder="WiFi, Kitchen, Parking, Pool">
+                    <small style="color: #666; font-size: 14px;">Enter amenities separated by commas (e.g., WiFi, Kitchen, Parking)</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Images</label><br>
+                    {{#each property.images}}
+                    <img src="{{this}}" alt="photo" style="width:70px;height:70px;object-fit:cover;margin-right:8px;margin-bottom:8px;border-radius:5px;">
+                    {{/each}}
+                </div>
+
+                <div class="form-group">
+                    <label for="propertyImage">Add Photos</label>
+                    <input type="file" id="propertyImage" name="propertyImage" accept="image/*" multiple>
+                <div style="color: #666; font-size: 14px;">You can select one or more images.</div>
+                </div>
+                <!--image Preview --> 
+                <div id="imagePreview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom:10px;"></div>
+
+                
+
+                <div class="button-group">
+                    <a href="/properties/manage" class="btn btn-secondary">← Back to Management</a>
+                    <button type="submit" class="btn btn-primary">Update Property</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const maxGuests = document.getElementById('maxGuests').value;
+
+            if (!title || !description || !maxGuests) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (maxGuests < 1) {
+                e.preventDefault();
+                alert('Max guests must be at least 1.');
+                return;
+            }
+        });
+
+        document.getElementById('propertyImage').addEventListener('change', function(e){
+            const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
+            for(const file of this.files) {
+            const reader = new FileReader();
+                reader.onload = function(evt) {
+            const img = document.createElement('img');
+                    img.src = evt.target.result;
+                    img.style.width = '90px';
+                    img.style.height = '90px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    preview.appendChild(img);
+            };
+                reader.readAsDataURL(file);
+        }
+});
+    </script>
+</body>
+</html>

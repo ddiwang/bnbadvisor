@@ -1,0 +1,508 @@
+{{!-- User Profile Page --}}
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-info">
+      <h1>{{user.firstName}} {{user.lastName}}</h1>
+      <p class="profile-email">{{user.email}}</p>
+      {{#if (eq user.role 'manager')}}
+        <span class="badge badge-secondary">Host</span>
+      {{else}}
+        <span class="badge">Guest</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if success}}
+    <div class="alert alert-success">
+      <span>{{success}}</span>
+    </div>
+  {{/if}}
+
+  {{#if error}}
+    <div class="alert alert-error">
+      <span>{{error}}</span>
+    </div>
+  {{/if}}
+
+  {{#if isOwner}}
+   
+    <div class="profile-sections">
+     
+      <div class="profile-section">
+        <h3>Personal Information</h3>
+        <form method="POST" action="/users/profile">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name:</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName" 
+                value="{{user.firstName}}" 
+                required
+                minlength="2"
+                maxlength="25"
+                class="form-control"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name:</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                name="lastName" 
+                value="{{user.lastName}}" 
+                required
+                minlength="2"
+                maxlength="25"
+                class="form-control"
+              >
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+      </div>
+
+      <!-- Host Features -->
+      {{#if (eq user.role 'manager')}}
+        <div class="profile-section">
+          <h3>Host Dashboard</h3>
+          <p class="section-description">Manage your properties and bookings</p>
+          
+          <div class="host-actions">
+            <a href="/properties/manage" class="btn btn-primary">
+              Manage Properties
+            </a>
+            
+            <div class="host-stats">
+              <div class="stat-card">
+                <div class="stat-number" id="propertyCount">-</div>
+                <div class="stat-label">My Properties</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" id="reviewCount">-</div>
+                <div class="stat-label">Total Reviews</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
+      <!-- for Reviews/Ratings -->
+      <div class="profile-section" id="reviews-extension">
+        <h3>My Reviews & Activity</h3>
+        
+        {{#if (eq user.role 'user')}}
+          <p class="section-description">Your review history and ratings</p>
+          
+          <div class="user-stats">
+            <div class="stat-card">
+              <div class="stat-number" id="userReviewCount">-</div>
+              <div class="stat-label">Reviews Written</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="avgRatingGiven">-</div>
+              <div class="stat-label">Avg Rating Given</div>
+            </div>
+          </div>
+          
+          <div class="recent-reviews" id="recentReviews">
+            <h4>Recent Reviews</h4>
+            <div class="loading">Loading your reviews...</div>
+          </div>
+        {{else}}
+          <p class="section-description">Reviews about your properties</p>
+          
+          <div class="host-review-stats">
+            <div class="stat-card">
+              <div class="stat-number" id="receivedReviewCount">-</div>
+              <div class="stat-label">Reviews Received</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="avgRatingReceived">-</div>
+              <div class="stat-label">Avg Rating</div>
+            </div>
+          </div>
+          
+          <div class="property-reviews" id="propertyReviews">
+            <h4>Recent Reviews for Your Properties</h4>
+            <div class="loading">Loading reviews...</div>
+          </div>
+        {{/if}}
+      </div>
+
+      <!-- Logout -->
+      <div class="profile-section">
+        <h3>Account Actions</h3>
+        <form method="POST" action="/users/logout">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+    </div>
+  {{else}}
+    <div class="profile-sections">
+      <div class="profile-section">
+        <h3>About {{user.firstName}}</h3>
+        <p class="card-text">This is {{user.firstName}} {{user.lastName}}'s public profile.</p>
+        <p class="card-text">Email: {{user.email}}</p>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="text-center mt-xl">
+    <a href="/" class="btn btn-ghost">← Back to Home</a>
+  </div>
+</div>
+<div id="reviewEditModal" class="modal" style="display:none;position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;justify-content:center;align-items:center;background:rgba(0,0,0,0.3)">
+  <div class="modal-content" style="background:white;padding:24px;border-radius:8px;min-width:250px;max-width:95vw;">
+    <h4>Edit Review</h4>
+    <form id="editReviewForm">
+      <input type="hidden" id="editReviewId">
+      <div class="form-group">
+        <label for="editReviewRating">Rating (1-5):</label>
+        <input type="number" id="editReviewRating" min="1" max="5" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="editReviewComment">Comment:</label>
+        <textarea id="editReviewComment" rows="3" required class="form-control"></textarea>
+      </div>
+      <div style="margin-top: 16px; text-align: right;">
+        <button type="button" class="btn btn-link" id="cancelEditBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Profile Page Styles -->
+<style>
+.host-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.host-stats, .user-stats, .host-review-stats {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1;
+  min-width: 120px;
+}
+
+.stat-number {
+  font-size: 2em;
+  font-weight: bold;
+  color: #2c5aa0;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.btn-icon {
+  margin-right: 8px;
+}
+
+.section-description {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.recent-reviews, .property-reviews {
+  margin-top: 20px;
+}
+
+.review-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.review-property {
+  font-weight: bold;
+  color: #333;
+}
+
+.review-rating {
+  color: #f39c12;
+}
+
+.review-date {
+  color: #999;
+  font-size: 0.85em;
+}
+
+.review-comment {
+  color: #555;
+  line-height: 1.4;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.no-reviews {
+  text-align: center;
+  color: #666;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .host-stats, .user-stats, .host-review-stats {
+    flex-direction: column;
+  }
+  
+  .host-actions {
+    align-items: center;
+  }
+}
+</style>
+
+<!-- Profile Page JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+  const userId = '{{user._id}}';
+  const userRole = '{{user.role}}';
+  
+  try {
+    // Load statistics based on user role
+    if (userRole === 'manager') {
+      await loadHostStats(userId);
+    } else {
+      await loadUserStats(userId);
+    }
+  } catch (error) {
+    console.error('Error loading profile stats:', error);
+  }
+});
+
+async function loadHostStats(userId) {
+  try {
+    // Load property count
+    const propertiesResponse = await fetch(`/api/properties?owner=${userId}`);
+    if (propertiesResponse.ok) {
+      const propertiesData = await propertiesResponse.json();
+      document.getElementById('propertyCount').textContent = propertiesData.length || 0;
+    }
+    
+    // Load reviews for host's properties
+    const reviewsResponse = await fetch(`/api/reviews/host/${userId}`);
+    if (reviewsResponse.ok) {
+      const reviewsData = await reviewsResponse.json();
+      document.getElementById('reviewCount').textContent = reviewsData.total || 0;
+      document.getElementById('receivedReviewCount').textContent = reviewsData.total || 0;
+      document.getElementById('avgRatingReceived').textContent = 
+        reviewsData.avgRating ? reviewsData.avgRating.toFixed(1) : 'N/A';
+      
+      displayPropertyReviews(reviewsData.reviews || []);
+    }
+  } catch (error) {
+    console.error('Error loading host stats:', error);
+    document.getElementById('propertyCount').textContent = 'Error';
+    document.getElementById('reviewCount').textContent = 'Error';
+  }
+}
+
+async function loadUserStats(userId) {
+  try {
+    // Load user's reviews
+    const response = await fetch(`/api/reviews/user/${userId}`);
+    if (response.ok) {
+      const data = await response.json();
+      document.getElementById('userReviewCount').textContent = data.total || 0;
+      document.getElementById('avgRatingGiven').textContent = 
+        data.avgRating ? data.avgRating.toFixed(1) : 'N/A';
+      
+      displayUserReviews(data.reviews || []);
+    }
+  } catch (error) {
+    console.error('Error loading user stats:', error);
+    document.getElementById('userReviewCount').textContent = 'Error';
+    document.getElementById('avgRatingGiven').textContent = 'Error';
+  }
+}
+
+function displayUserReviews(reviews) {
+  const container = document.getElementById('recentReviews');
+  
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <h4>Recent Reviews</h4>
+      <div class="no-reviews">
+        <p>You haven't written any reviews yet.</p>
+        <p>Start exploring properties and share your experiences!</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const reviewsHtml = reviews.slice(0, 5).map(review => `
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-property">${review.property?.title || 'Unknown Property'}</span>
+        <div>
+          <span class="review-rating">Rating: ${review.rating}/5</span>
+          <span class="review-date">${formatDate(review.createdAt)}</span>
+        </div>
+      </div>
+      <div class="review-comment">"${review.comment}"</div>
+      <div class="review-actions" style="margin-top:8px;">
+        <button class="btn btn-sm btn-secondary edit-review-btn" data-review-id="${review._id}" data-rating="${review.rating}" data-comment="${encodeURIComponent(review.comment)}">Edit</button>
+        <button class="btn btn-sm btn-danger delete-review-btn" data-review-id="${review._id}">Delete</button>
+      </div>
+    </div>
+  `).join('');
+  
+  container.innerHTML = `
+    <h4>Recent Reviews (${reviews.length})</h4>
+    ${reviewsHtml}
+  `;
+
+  // 绑定事件
+  setTimeout(bindReviewActionEvents, 10); // 等 DOM 更新后再绑定
+}
+
+function displayPropertyReviews(reviews) {
+  const container = document.getElementById('propertyReviews');
+  
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <h4>Recent Reviews for Your Properties</h4>
+      <div class="no-reviews">
+        <p>No reviews for your properties yet.</p>
+        <p>Encourage guests to leave reviews after their stays!</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const reviewsHtml = reviews.slice(0, 5).map(review => `
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-property">${review.property?.title || 'Unknown Property'}</span>
+        <div>
+          <span class="review-rating">Rating: ${review.rating}/5</span>
+          <span class="review-date">${formatDate(review.createdAt)}</span>
+        </div>
+      </div>
+      <div class="review-comment">
+        <strong>By ${review.user?.firstName || 'Anonymous'}:</strong> "${review.comment}"
+      </div>
+    </div>
+  `).join('');
+  
+  container.innerHTML = `
+    <h4>Recent Reviews for Your Properties (${reviews.length} total)</h4>
+    ${reviewsHtml}
+  `;
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+}
+
+function bindReviewActionEvents() {
+  // 删除
+  document.querySelectorAll('.delete-review-btn').forEach(btn => {
+    btn.onclick = async function() {
+      const reviewId = btn.getAttribute('data-review-id');
+      if (!reviewId) return;
+      if (!confirm('Are you sure you want to delete this review?')) return;
+      try {
+        const res = await fetch(`/reviews/${reviewId}`, { method: 'DELETE' });
+        if (res.ok) {
+          // 重新加载
+          loadUserStats('{{user._id}}');
+        } else {
+          alert('Failed to delete review.');
+        }
+      } catch(err) {
+        alert('Delete failed');
+      }
+    }
+  });
+
+  // 编辑
+  document.querySelectorAll('.edit-review-btn').forEach(btn => {
+    btn.onclick = function() {
+      const reviewId = btn.getAttribute('data-review-id');
+      const rating = btn.getAttribute('data-rating');
+      const comment = decodeURIComponent(btn.getAttribute('data-comment'));
+      showEditModal(reviewId, rating, comment);
+    }
+  });
+}
+
+
+function showEditModal(reviewId, rating, comment) {
+  document.getElementById('reviewEditModal').style.display = 'flex';
+  document.getElementById('editReviewId').value = reviewId;
+  document.getElementById('editReviewRating').value = rating;
+  document.getElementById('editReviewComment').value = comment;
+}
+
+function hideEditModal() {
+  document.getElementById('reviewEditModal').style.display = 'none';
+}
+
+document.getElementById('cancelEditBtn').onclick = function() {
+  hideEditModal();
+}
+
+// 提交修改
+document.getElementById('editReviewForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const reviewId = document.getElementById('editReviewId').value;
+  const rating = document.getElementById('editReviewRating').value;
+  const comment = document.getElementById('editReviewComment').value;
+
+  try {
+    const res = await fetch(`/reviews/${reviewId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ rating, comment })
+    });
+    if (res.ok) {
+      hideEditModal();
+      loadUserStats('{{user._id}}');
+    } else {
+      alert('Failed to update review.');
+    }
+  } catch (err) {
+    alert('Error updating review.');
+  }
+}
+</script>
